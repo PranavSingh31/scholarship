@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:portal/file.dart';
 import 'package:portal/profile.dart';
 
 import 'dashboard.dart';
@@ -24,9 +25,11 @@ class MyApp extends StatelessWidget {
           '/login':  (BuildContext ctx) => const Login(),
           '/dashboard': (BuildContext ctx) => const Dashboard(),
           '/profile': (BuildContext ctx) => const Profile(),
+          '/documents':(BuildContext ctx) => const FileUpload(),
         },
         home: const Login(),
       ),
+      // to use a custom loader.....
       /*
       useDefaultLoading: ,
       overlayWidget: Center(

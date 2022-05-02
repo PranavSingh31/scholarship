@@ -41,7 +41,8 @@ dependencies:
   loader_overlay: ^2.0.6
   flutter_native_splash: ^2.1.2+1
   cloud_firestore: ^3.1.11
-
+  file_picker: ^4.5.1
+  firebase_storage: ^10.2.14
 
 dev_dependencies:
   flutter_test:
