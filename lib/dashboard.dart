@@ -5,7 +5,6 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:portal/var.dart';
 import 'package:flutter/services.dart';
 
-
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
   @override
@@ -13,7 +12,6 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-
   @override
   void initState() {
     // TODO: implement initState
@@ -25,8 +23,8 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    if(type != 2){
-      Future.delayed(const Duration(milliseconds: 1000),(){
+    if (type != 2) {
+      Future.delayed(const Duration(milliseconds: 1000), () {
         print('excetute ..................');
         setState(() {});
       });
@@ -41,7 +39,7 @@ class _DashboardState extends State<Dashboard> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-            /*
+              /*
             ElevatedButton(
               onPressed: (){
                 FirebaseAuth.instance.signOut();
@@ -59,7 +57,6 @@ class _DashboardState extends State<Dashboard> {
             ),
             */
               formOption(),
-
             ],
           ),
         ),
@@ -67,14 +64,17 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Future<void> userInfo() async{
+  Future<void> userInfo() async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     CollectionReference userDetails = firestore.collection('user');
-    userDetails.doc(FirebaseAuth.instance.currentUser?.email.toString()).get().then((value){
-      if(value.data() != null){
+    userDetails
+        .doc(FirebaseAuth.instance.currentUser?.email.toString())
+        .get()
+        .then((value) {
+      if (value.data() != null) {
         print(value.data());
         type = 1;
-      }else{
+      } else {
         print('empty');
         type = 2;
       }
@@ -84,34 +84,37 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
-  Widget formOption(){
-    if (type == 1){
+  Widget formOption() {
+    if (type == 1) {
       //show application site....
       context.loaderOverlay.hide();
       return const Text('Under Build.........');
-    }else if(type == 2){
+    } else if (type == 2) {
       context.loaderOverlay.hide();
       return noInfo();
-    }else{
+    } else {
       return const Text('Loading......');
     }
   }
 
-  Widget noInfo(){
+  Widget noInfo() {
     return SizedBox(
-      width: MediaQuery.of(context).size.width*.7,
+      width: MediaQuery.of(context).size.width * .7,
       child: Card(
         child: Column(
           children: [
             const Padding(padding: EdgeInsets.all(12)),
-            const Text('Personal Details',style: TextStyle(fontSize: 32),),
+            const Text(
+              'Personal Details',
+              style: TextStyle(fontSize: 32),
+            ),
             const Padding(padding: EdgeInsets.all(12)),
             const Padding(padding: EdgeInsets.all(12)),
             //First Name input
             SizedBox(
-              width: MediaQuery.of(context).size.width*.5,
+              width: MediaQuery.of(context).size.width * .5,
               child: TextField(
-                enabled:edit,
+                enabled: edit,
                 keyboardType: TextInputType.text,
                 controller: firstName,
                 decoration: const InputDecoration(
@@ -123,9 +126,9 @@ class _DashboardState extends State<Dashboard> {
             const Padding(padding: EdgeInsets.all(12)),
             //Middle Name Input
             SizedBox(
-              width: MediaQuery.of(context).size.width*.5,
+              width: MediaQuery.of(context).size.width * .5,
               child: TextField(
-                enabled:edit,
+                enabled: edit,
                 keyboardType: TextInputType.text,
                 controller: middleName,
                 decoration: const InputDecoration(
@@ -137,9 +140,9 @@ class _DashboardState extends State<Dashboard> {
             const Padding(padding: EdgeInsets.all(12)),
             //Last Name Input
             SizedBox(
-              width: MediaQuery.of(context).size.width*.5,
+              width: MediaQuery.of(context).size.width * .5,
               child: TextField(
-                enabled:edit,
+                enabled: edit,
                 keyboardType: TextInputType.text,
                 controller: lastName,
                 decoration: const InputDecoration(
@@ -151,9 +154,9 @@ class _DashboardState extends State<Dashboard> {
             const Padding(padding: EdgeInsets.all(12)),
             //Aadhaar Number
             SizedBox(
-              width: MediaQuery.of(context).size.width*.5,
+              width: MediaQuery.of(context).size.width * .5,
               child: TextField(
-                enabled:edit,
+                enabled: edit,
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 controller: aadhaar,
@@ -166,9 +169,9 @@ class _DashboardState extends State<Dashboard> {
             const Padding(padding: EdgeInsets.all(12)),
             //TIET Roll Number
             SizedBox(
-              width: MediaQuery.of(context).size.width*.5,
+              width: MediaQuery.of(context).size.width * .5,
               child: TextField(
-                enabled:edit,
+                enabled: edit,
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 controller: rollNumber,
@@ -181,9 +184,9 @@ class _DashboardState extends State<Dashboard> {
             const Padding(padding: EdgeInsets.all(12)),
             //Mobile Number
             SizedBox(
-              width: MediaQuery.of(context).size.width*.5,
+              width: MediaQuery.of(context).size.width * .5,
               child: TextField(
-                enabled:edit,
+                enabled: edit,
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 controller: personalMobile,
@@ -191,8 +194,11 @@ class _DashboardState extends State<Dashboard> {
                   border: OutlineInputBorder(),
                   labelText: 'Personal Mobile Number',
                   prefixIcon: Padding(
-                      child: Text('+91',style: TextStyle(fontSize: 16),),
-                      padding: EdgeInsets.fromLTRB(8,10,8,10),
+                    child: Text(
+                      '+91',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    padding: EdgeInsets.fromLTRB(8, 10, 8, 10),
                   ),
                 ),
               ),
@@ -200,9 +206,9 @@ class _DashboardState extends State<Dashboard> {
             const Padding(padding: EdgeInsets.all(12)),
             //Address Line 1
             SizedBox(
-              width: MediaQuery.of(context).size.width*.5,
+              width: MediaQuery.of(context).size.width * .5,
               child: TextField(
-                enabled:edit,
+                enabled: edit,
                 keyboardType: TextInputType.streetAddress,
                 controller: addressLine1,
                 decoration: const InputDecoration(
@@ -214,9 +220,9 @@ class _DashboardState extends State<Dashboard> {
             const Padding(padding: EdgeInsets.all(12)),
             //Address Line 2
             SizedBox(
-              width: MediaQuery.of(context).size.width*.5,
+              width: MediaQuery.of(context).size.width * .5,
               child: TextField(
-                enabled:edit,
+                enabled: edit,
                 keyboardType: TextInputType.streetAddress,
                 controller: addressLine2,
                 decoration: const InputDecoration(
@@ -232,9 +238,9 @@ class _DashboardState extends State<Dashboard> {
               children: [
                 //City
                 SizedBox(
-                  width: MediaQuery.of(context).size.width*.25-10,
+                  width: MediaQuery.of(context).size.width * .25 - 10,
                   child: TextField(
-                    enabled:edit,
+                    enabled: edit,
                     keyboardType: TextInputType.streetAddress,
                     controller: city,
                     decoration: const InputDecoration(
@@ -246,9 +252,9 @@ class _DashboardState extends State<Dashboard> {
                 const Padding(padding: EdgeInsets.all(12)),
                 //State
                 SizedBox(
-                  width: MediaQuery.of(context).size.width*.25-10,
+                  width: MediaQuery.of(context).size.width * .25 - 10,
                   child: TextField(
-                    enabled:edit,
+                    enabled: edit,
                     keyboardType: TextInputType.streetAddress,
                     controller: state,
                     decoration: const InputDecoration(
@@ -267,9 +273,9 @@ class _DashboardState extends State<Dashboard> {
               children: [
                 //Mother's Name
                 SizedBox(
-                  width: MediaQuery.of(context).size.width*.25-10,
+                  width: MediaQuery.of(context).size.width * .25 - 10,
                   child: TextField(
-                    enabled:edit,
+                    enabled: edit,
                     keyboardType: TextInputType.name,
                     controller: motherName,
                     decoration: const InputDecoration(
@@ -281,9 +287,9 @@ class _DashboardState extends State<Dashboard> {
                 const Padding(padding: EdgeInsets.all(12)),
                 //Mother's Occupation
                 SizedBox(
-                  width: MediaQuery.of(context).size.width*.25-10,
+                  width: MediaQuery.of(context).size.width * .25 - 10,
                   child: TextField(
-                    enabled:edit,
+                    enabled: edit,
                     keyboardType: TextInputType.text,
                     controller: motherOccupation,
                     decoration: const InputDecoration(
@@ -302,9 +308,9 @@ class _DashboardState extends State<Dashboard> {
               children: [
                 //Father's Name
                 SizedBox(
-                  width: MediaQuery.of(context).size.width*.25-10,
+                  width: MediaQuery.of(context).size.width * .25 - 10,
                   child: TextField(
-                    enabled:edit,
+                    enabled: edit,
                     keyboardType: TextInputType.name,
                     controller: fatherName,
                     decoration: const InputDecoration(
@@ -316,9 +322,9 @@ class _DashboardState extends State<Dashboard> {
                 const Padding(padding: EdgeInsets.all(12)),
                 //Father's Occupation
                 SizedBox(
-                  width: MediaQuery.of(context).size.width*.25-10,
+                  width: MediaQuery.of(context).size.width * .25 - 10,
                   child: TextField(
-                    enabled:edit,
+                    enabled: edit,
                     keyboardType: TextInputType.text,
                     controller: fatherOccupation,
                     decoration: const InputDecoration(
@@ -337,9 +343,9 @@ class _DashboardState extends State<Dashboard> {
               children: [
                 //Father's Name
                 SizedBox(
-                  width: MediaQuery.of(context).size.width*.25-10,
+                  width: MediaQuery.of(context).size.width * .25 - 10,
                   child: TextField(
-                    enabled:edit,
+                    enabled: edit,
                     keyboardType: TextInputType.phone,
                     controller: fatherMobile,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -347,8 +353,11 @@ class _DashboardState extends State<Dashboard> {
                       border: OutlineInputBorder(),
                       labelText: "Father's Mobile Number",
                       prefixIcon: Padding(
-                        child: Text('+91',style: TextStyle(fontSize: 16),),
-                        padding: EdgeInsets.fromLTRB(8,10,8,10),
+                        child: Text(
+                          '+91',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        padding: EdgeInsets.fromLTRB(8, 10, 8, 10),
                       ),
                     ),
                   ),
@@ -356,9 +365,9 @@ class _DashboardState extends State<Dashboard> {
                 const Padding(padding: EdgeInsets.all(12)),
                 //Father's Occupation
                 SizedBox(
-                  width: MediaQuery.of(context).size.width*.25-10,
+                  width: MediaQuery.of(context).size.width * .25 - 10,
                   child: TextField(
-                    enabled:edit,
+                    enabled: edit,
                     keyboardType: TextInputType.phone,
                     controller: motherMobile,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -366,8 +375,11 @@ class _DashboardState extends State<Dashboard> {
                       border: OutlineInputBorder(),
                       labelText: "Mother's Mobile Number",
                       prefixIcon: Padding(
-                        child: Text('+91',style: TextStyle(fontSize: 16),),
-                        padding: EdgeInsets.fromLTRB(8,10,8,10),
+                        child: Text(
+                          '+91',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        padding: EdgeInsets.fromLTRB(8, 10, 8, 10),
                       ),
                     ),
                   ),
@@ -378,9 +390,9 @@ class _DashboardState extends State<Dashboard> {
             //Bank Details-------------------------------------------------------------
             //Account Name
             SizedBox(
-              width: MediaQuery.of(context).size.width*.5,
+              width: MediaQuery.of(context).size.width * .5,
               child: TextField(
-                enabled:edit,
+                enabled: edit,
                 keyboardType: TextInputType.name,
                 controller: accountName,
                 decoration: const InputDecoration(
@@ -392,9 +404,9 @@ class _DashboardState extends State<Dashboard> {
             const Padding(padding: EdgeInsets.all(12)),
             //Account Number
             SizedBox(
-              width: MediaQuery.of(context).size.width*.5,
+              width: MediaQuery.of(context).size.width * .5,
               child: TextField(
-                enabled:edit,
+                enabled: edit,
                 keyboardType: TextInputType.number,
                 controller: accountNumber,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -407,9 +419,9 @@ class _DashboardState extends State<Dashboard> {
             const Padding(padding: EdgeInsets.all(12)),
             //Bank IFSC Code
             SizedBox(
-              width: MediaQuery.of(context).size.width*.5,
+              width: MediaQuery.of(context).size.width * .5,
               child: TextField(
-                enabled:edit,
+                enabled: edit,
                 keyboardType: TextInputType.text,
                 controller: bankIFSC,
                 decoration: const InputDecoration(
@@ -420,54 +432,54 @@ class _DashboardState extends State<Dashboard> {
             ),
             const Padding(padding: EdgeInsets.all(12)),
             //Income Value
-           Row(
-             mainAxisAlignment: MainAxisAlignment.center,
-             crossAxisAlignment: CrossAxisAlignment.center,
-             children: [
-               SizedBox(
-                 width: MediaQuery.of(context).size.width*.2,
-                 child: DropdownButton(
-                   hint: const Text('Annual Income'),
-                   value: selectedIncome,
-                   onChanged: (newValue) {
-                     setState(() {
-                       selectedIncome = newValue;
-                     });
-                   },
-                   items: incomeOptions.map((value) {
-                     return DropdownMenuItem(
-                       child: Text(value),
-                       value: value,
-                     );
-                   }).toList(),
-                 ),
-               ),
-               const Padding(padding: EdgeInsets.all(12)),
-               SizedBox(
-                 width: MediaQuery.of(context).size.width*.2,
-                 child: DropdownButton(
-                   hint: const Text('Year'),
-                   value: selectedYear,
-                   onChanged: (newValue) {
-                     setState(() {
-                       selectedYear = newValue;
-                     });
-                   },
-                   items: yearOptions.map((value) {
-                     return DropdownMenuItem(
-                       child: Text(value),
-                       value: value,
-                     );
-                   }).toList(),
-                 ),
-               ),
-             ],
-           ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * .2,
+                  child: DropdownButton(
+                    hint: const Text('Annual Income'),
+                    value: selectedIncome,
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedIncome = newValue;
+                      });
+                    },
+                    items: incomeOptions.map((value) {
+                      return DropdownMenuItem(
+                        child: Text(value),
+                        value: value,
+                      );
+                    }).toList(),
+                  ),
+                ),
+                const Padding(padding: EdgeInsets.all(12)),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * .2,
+                  child: DropdownButton(
+                    hint: const Text('Year'),
+                    value: selectedYear,
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedYear = newValue;
+                      });
+                    },
+                    items: yearOptions.map((value) {
+                      return DropdownMenuItem(
+                        child: Text(value),
+                        value: value,
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ),
             const Padding(padding: EdgeInsets.all(12)),
             marks(),
             const Padding(padding: EdgeInsets.all(12)),
             SizedBox(
-              width: MediaQuery.of(context).size.width*.2,
+              width: MediaQuery.of(context).size.width * .2,
               child: DropdownButton(
                 hint: const Text('Special Case Request'),
                 value: selectedCase,
@@ -493,18 +505,20 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Widget marks(){
-    if(selectedYear == '1st'){
+  Widget marks() {
+    if (selectedYear == '1st') {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
-            width: MediaQuery.of(context).size.width*.2,
+            width: MediaQuery.of(context).size.width * .2,
             child: TextField(
-              enabled:edit,
+              enabled: edit,
               keyboardType: TextInputType.number,
-              inputFormatters:[FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))
+              ],
               controller: boards,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -514,11 +528,13 @@ class _DashboardState extends State<Dashboard> {
           ),
           const Padding(padding: EdgeInsets.all(12)),
           SizedBox(
-            width: MediaQuery.of(context).size.width*.2,
+            width: MediaQuery.of(context).size.width * .2,
             child: TextField(
-              enabled:edit,
+              enabled: edit,
               keyboardType: TextInputType.number,
-              inputFormatters:[FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,12}'))],
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,12}'))
+              ],
               controller: jee,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -529,17 +545,19 @@ class _DashboardState extends State<Dashboard> {
           const Padding(padding: EdgeInsets.all(12)),
         ],
       );
-    }else{
+    } else {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
-            width: MediaQuery.of(context).size.width*.2,
+            width: MediaQuery.of(context).size.width * .2,
             child: TextField(
-              enabled:edit,
+              enabled: edit,
               keyboardType: TextInputType.number,
-              inputFormatters:[FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))],
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}'))
+              ],
               controller: cg,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -549,9 +567,9 @@ class _DashboardState extends State<Dashboard> {
           ),
           const Padding(padding: EdgeInsets.all(12)),
           SizedBox(
-            width: MediaQuery.of(context).size.width*.2,
+            width: MediaQuery.of(context).size.width * .2,
             child: TextField(
-              enabled:edit,
+              enabled: edit,
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               controller: backlog,
@@ -567,42 +585,86 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
-  Widget finalSet(){
-    if(selectedCase == 'Yes'){
+  Widget finalSet() {
+    if (selectedCase == 'Yes') {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-         SizedBox(
-           width: MediaQuery.of(context).size.width*.5,
-           child:  TextField(
-             enabled: edit,
-             keyboardType: TextInputType.multiline,
-             maxLines: 5,
-             minLines: 1,
-             controller: specialText,
-             decoration: const InputDecoration(
-               border: OutlineInputBorder(),
-               labelText: "Reason for Special Case Request",
-             ),
-           ),
-         ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * .5,
+            child: TextField(
+              enabled: edit,
+              keyboardType: TextInputType.multiline,
+              maxLines: 5,
+              minLines: 1,
+              controller: specialText,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: "Reason for Special Case Request",
+              ),
+            ),
+          ),
           const Padding(padding: EdgeInsets.all(12)),
           ElevatedButton(
-              onPressed: (){
-                Navigator.pushNamed(context, '/documents');
-              },
-              child: const Padding(padding: EdgeInsets.all(8),child: Text('Upload Supporting Documents'),),
+            onPressed: () {
+              Navigator.pushNamed(context, '/documents');
+            },
+            child: const Padding(
+              padding: EdgeInsets.all(8),
+              child: Text('Upload Supporting Documents'),
+            ),
           ),
         ],
       );
-    }
-    else{
+    } else {
       return ElevatedButton(
-        onPressed: (){},
-        child: const Padding(padding: EdgeInsets.all(8),child: Text('Upload Supporting Documents'),),
+        onPressed: () {},
+        child: const Padding(
+          padding: EdgeInsets.all(8),
+          child: Text('Upload Supporting Documents'),
+        ),
       );
     }
   }
 
+  Future<void> saveinfo() async {
+    try {
+      var firebase = FirebaseFirestore.instance;
+      firebase
+          .collection('user')
+          .doc(FirebaseAuth.instance.currentUser?.email)
+          .set({
+        'firstName': firstName.text.trim(),
+        'middleName': middleName.text.trim(),
+        'lastName': lastName.text.trim(),
+        'rollNumber': rollNumber.text.trim(),
+        'personalMobile': personalMobile.text.trim(),
+        'addressLine1': addressLine1.text.trim(),
+        'addressLine2': addressLine2.text.trim(),
+        'city': city.text.trim(),
+        'state': state.text.trim(),
+        'motherOccupation': motherOccupation.text.trim(),
+        'motherName': motherName.text.trim(),
+        'fatherOccupation': fatherOccupation.text.trim(),
+        'fatherName': fatherName.text.trim(),
+        'fatherMobile': fatherMobile.text.trim(),
+        'motherMobile': motherMobile.text.trim(),
+        'aadhaar': aadhaar.text.trim(),
+        'accountNumber': accountNumber.text.trim(),
+        'accountName': accountName.text.trim(),
+        'bankIFSC': bankIFSC.text.trim(),
+        'incomeOptions': selectedIncome.text.trim(),
+        'yearOptions': selectedYear.text.trim(),
+        'cg': cg.text.trim(),
+        'backlog': backlog.text.trim(),
+        'jee': jee.text.trim(),
+        'boards': boards.text.trim(),
+        'specialOptions': selectedCase.text.trim(),
+        'specialText': specialText.text.trim(),
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
 }
