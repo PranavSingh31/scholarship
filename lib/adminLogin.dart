@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:portal/login.dart';
 
 import 'firebase_options.dart';
 
@@ -34,7 +36,7 @@ class _LoginState extends State<Login> {
         title:
             const Center(child: Text('Thapar Scholarship Portal - Admin Mode')),
       ),
-      backgroundColor: Color.fromARGB(255, 224, 202, 2),
+      backgroundColor: Colors.grey,
       body: Center(
         child: SizedBox(
           width: MediaQuery.of(context).size.width * .4,
@@ -157,8 +159,30 @@ class _LoginState extends State<Login> {
       }
       return;
     }
+    admincheck();
     print('Login Complete');
     Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
+  }
+
+  void admincheck() {
+    var Admin;
+    try {
+      final docRef = FirebaseFirestore.instance
+          .collection('user')
+          .doc(FirebaseAuth.instance.currentUser?.email);
+      docRef.get().then((DocumentSnapshot doc) {
+        Admin = doc['isAdmin'];
+      });
+    } catch (e) {
+      print(e);
+      return;
+    }
+    if (Admin == true) {
+      Navigator.pushNamedAndRemoveUntil(context, 'adminDash', (route) => false);
+    } else {
+      showAlert('Not an Admin-ID\n Try with different account');
+      FirebaseAuth.instance.signOut();
+    }
   }
 
   void showAlert(var message) {
