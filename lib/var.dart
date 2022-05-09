@@ -25,7 +25,7 @@ var bankIFSC = TextEditingController();
 var selectedIncome;
 var incomeOptions = ['less than Rs10,000','Rs10,000-Rs20,000'];
 var selectedYear;
-var yearOptions = ['1st','2nd'];
+var yearOptions = ['1st','2nd','3rd','4th'];
 var cg = TextEditingController();
 var backlog = TextEditingController();
 var jee = TextEditingController();

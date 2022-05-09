@@ -606,29 +606,27 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
           const Padding(padding: EdgeInsets.all(12)),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/documents');
-            },
-            child: const Padding(
-              padding: EdgeInsets.all(8),
-              child: Text('Upload Supporting Documents'),
-            ),
-          ),
+          submitDetails(),
         ],
       );
     } else {
-      return ElevatedButton(
-        onPressed: () {},
-        child: const Padding(
-          padding: EdgeInsets.all(8),
-          child: Text('Upload Supporting Documents'),
-        ),
-      );
+      return submitDetails();
     }
   }
 
-  Future<void> saveinfo() async {
+  Widget submitDetails(){
+    return ElevatedButton(
+      onPressed: () {
+        saveInfo();
+      },
+      child: const Padding(
+        padding: EdgeInsets.all(8),
+        child: Text('Upload Supporting Documents'),
+      ),
+    );
+  }
+
+  Future<void> saveInfo() async {
     try {
       var firebase = FirebaseFirestore.instance;
       firebase
@@ -662,6 +660,8 @@ class _DashboardState extends State<Dashboard> {
         'boards': boards.text.trim(),
         'specialOptions': selectedCase.text.trim(),
         'specialText': specialText.text.trim(),
+        'isAdmin':false,
+        'uploadFiles':false,
       });
     } catch (e) {
       print(e);
