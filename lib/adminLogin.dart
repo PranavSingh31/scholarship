@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
-import 'package:portal/login.dart';
 
 import 'firebase_options.dart';
 
@@ -11,14 +11,14 @@ var email = TextEditingController();
 var pass = TextEditingController();
 var _hidden = true;
 
-class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+class AdminLogin extends StatefulWidget {
+  const AdminLogin({Key? key}) : super(key: key);
 
   @override
-  State<Login> createState() => _LoginState();
+  State<AdminLogin> createState() => _AdminLoginState();
 }
 
-class _LoginState extends State<Login> {
+class _AdminLoginState extends State<AdminLogin> {
   @override
   void initState() {
     // TODO: implement initState
@@ -35,8 +35,18 @@ class _LoginState extends State<Login> {
       appBar: AppBar(
         title:
             const Center(child: Text('Thapar Scholarship Portal - Admin Mode')),
+        actions:<Widget> [
+          TextButton(
+            onPressed: (){
+              Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+            },
+            child: const Padding(
+              padding: EdgeInsets.all(8),
+              child: Text('Student',style: TextStyle(color: Colors.white),),),
+          ),
+        ],
       ),
-      backgroundColor: Colors.grey,
+      backgroundColor: const Color.fromARGB(255, 224, 202, 2),
       body: Center(
         child: SizedBox(
           width: MediaQuery.of(context).size.width * .4,
@@ -49,7 +59,7 @@ class _LoginState extends State<Login> {
                 children: [
                   const Padding(padding: EdgeInsets.all(20)),
                   const Text(
-                    'Login',
+                    'Admin Login',
                     style: TextStyle(
                       fontSize: 32.0,
                     ),
@@ -134,13 +144,13 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> authValidate() async {
+    pass.text = '';
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email.text.trim(),
         password: pass.text.trim(),
       );
     } on FirebaseAuthException catch (e) {
-      pass.text = '';
       if (e.code == 'user-not-found') {
         //print('No user found for that email.');
         showAlert('No User Found');
@@ -154,35 +164,33 @@ class _LoginState extends State<Login> {
         //print('Internet not connected');
         showAlert('Please Check Internet Connection');
       } else {
-        print(e.code);
+        if (kDebugMode) {
+          print(e.code);
+        }
         showAlert('System Error\nTry Again Later');
       }
       return;
     }
-    admincheck();
-    print('Login Complete');
-    Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
+    checkAdmin();
   }
-
-  void admincheck() {
-    var Admin;
-    try {
-      final docRef = FirebaseFirestore.instance
-          .collection('user')
-          .doc(FirebaseAuth.instance.currentUser?.email);
-      docRef.get().then((DocumentSnapshot doc) {
-        Admin = doc['isAdmin'];
-      });
-    } catch (e) {
-      print(e);
-      return;
-    }
-    if (Admin == true) {
-      Navigator.pushNamedAndRemoveUntil(context, 'adminDash', (route) => false);
-    } else {
-      showAlert('Not an Admin-ID\n Try with different account');
-      FirebaseAuth.instance.signOut();
-    }
+  Future<void> checkAdmin()async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    CollectionReference userDetails = firestore.collection('user');
+    userDetails
+        .doc(FirebaseAuth.instance.currentUser?.email.toString())
+        .get()
+        .then((value) {
+      if (value.data() != null) {
+        if(value['isAdmin']==true) {
+          Navigator.pushNamedAndRemoveUntil(context, '/AdminDash', (route) => false);
+        }else{
+          FirebaseAuth.instance.signOut();
+          showAlert('No Admin Privileges');
+        }
+      } else {
+        showAlert('Account Info Incorrect\n Contact Admin');
+      }
+    });
   }
 
   void showAlert(var message) {

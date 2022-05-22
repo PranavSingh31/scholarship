@@ -1,6 +1,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
@@ -33,6 +34,16 @@ class _LoginState extends State<Login> {
     return Scaffold(
       appBar: AppBar(
         title: const Center(child:Text('Thapar Scholarship Portal')),
+        actions:<Widget> [
+          TextButton(
+              onPressed: (){
+                Navigator.pushNamedAndRemoveUntil(context, '/adminLogin', (route) => false);
+              },
+              child: const Padding(
+                padding: EdgeInsets.all(8),
+                child: Text('Admin',style: TextStyle(color: Colors.white),),),
+          ),
+        ],
       ),
       backgroundColor: Colors.grey,
       body: Center(
@@ -144,12 +155,13 @@ class _LoginState extends State<Login> {
         //print('Internet not connected');
        showAlert('Please Check Internet Connection');
       }else{
-        print(e.code);
+        if (kDebugMode) {
+          print(e.code);
+        }
         showAlert('System Error\nTry Again Later');
       }
       return;
     }
-    print('Login Complete');
     Navigator.pushNamedAndRemoveUntil(context, '/dashboard', (route) => false);
   }
   void showAlert(var message){
