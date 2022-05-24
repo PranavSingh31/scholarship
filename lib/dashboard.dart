@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:portal/var.dart';
@@ -23,39 +24,42 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    if (type != 2) {
-      Future.delayed(const Duration(milliseconds: 1000), () {
-        print('excetute ..................');
-        setState(() {});
+    if (type == 3) {
+      context.loaderOverlay.show();
+      Future.delayed(const Duration(milliseconds: 500), () {
+        Navigator.pushNamedAndRemoveUntil(context, '/documents', (route) => false);
+      });
+    } else if (type == 0) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (kDebugMode) {
+          print('Reload to set state');
+        }
+        setState(() {
+
+        });
       });
     }
-    context.loaderOverlay.hide();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Welcome'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: (){
+              context.loaderOverlay.show();
+              FirebaseAuth.instance.signOut();
+              Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+            },
+            child: const Padding(
+              padding: EdgeInsets.all(8),
+              child: Text('Logout',style: TextStyle(color: Colors.white),),),
+          ),
+        ],
       ),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              /*
-            ElevatedButton(
-              onPressed: (){
-                FirebaseAuth.instance.signOut();
-                Navigator.pushNamedAndRemoveUntil(context, '/login',(route) => false);
-              },
-              child: const Text('Logout',style: TextStyle(fontSize: 20),),
-            ),
-            ElevatedButton(
-              onPressed: (){
-                print('checking....');
-                context.loaderOverlay.show();
-                userInfo();
-              },
-              child: const Text('Get Info',style: TextStyle(fontSize: 20),),
-            ),
-            */
               formOption(),
             ],
           ),
@@ -72,10 +76,12 @@ class _DashboardState extends State<Dashboard> {
         .get()
         .then((value) {
       if (value.data() != null) {
-        print(value.data());
-        type = 1;
+        if(value['uploadFiles']==true) {
+          type = 1;
+        }else{
+          type = 3;
+        }
       } else {
-        print('empty');
         type = 2;
       }
     });
@@ -87,9 +93,15 @@ class _DashboardState extends State<Dashboard> {
   Widget formOption() {
     if (type == 1) {
       //show application site....
+      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
       context.loaderOverlay.hide();
       return const Text('Under Build.........');
+
     } else if (type == 2) {
+      Navigator.pushNamedAndRemoveUntil(context, '/documents', (route) => false);
+      context.loaderOverlay.hide();
+      return noInfo();
+    }else if(type == 3){
       context.loaderOverlay.hide();
       return noInfo();
     } else {
@@ -167,7 +179,7 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
             const Padding(padding: EdgeInsets.all(12)),
-            //TIET Roll Number
+            //Thapar Roll Number
             SizedBox(
               width: MediaQuery.of(context).size.width * .5,
               child: TextField(
@@ -617,6 +629,7 @@ class _DashboardState extends State<Dashboard> {
   Widget submitDetails(){
     return ElevatedButton(
       onPressed: () {
+        context.loaderOverlay.show();
         saveInfo();
       },
       child: const Padding(
@@ -628,8 +641,7 @@ class _DashboardState extends State<Dashboard> {
 
   Future<void> saveInfo() async {
     try {
-      var firebase = FirebaseFirestore.instance;
-      firebase
+       await FirebaseFirestore.instance
           .collection('user')
           .doc(FirebaseAuth.instance.currentUser?.email)
           .set({
@@ -652,19 +664,26 @@ class _DashboardState extends State<Dashboard> {
         'accountNumber': accountNumber.text.trim(),
         'accountName': accountName.text.trim(),
         'bankIFSC': bankIFSC.text.trim(),
-        'incomeOptions': selectedIncome.text.trim(),
-        'yearOptions': selectedYear.text.trim(),
+        'incomeOptions': selectedIncome,
+        'yearOptions': selectedYear,
         'cg': cg.text.trim(),
         'backlog': backlog.text.trim(),
         'jee': jee.text.trim(),
         'boards': boards.text.trim(),
-        'specialOptions': selectedCase.text.trim(),
+        'specialOptions': selectedCase,
         'specialText': specialText.text.trim(),
         'isAdmin':false,
         'uploadFiles':false,
       });
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
+      return;
     }
+    if (kDebugMode) {
+      print('Data Save Complete');
+    }
+    Navigator.pushNamedAndRemoveUntil(context, '/documents', (route) => false);
   }
 }

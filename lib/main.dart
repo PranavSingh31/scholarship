@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:portal/adminHome.dart';
 import 'package:portal/adminLogin.dart';
 import 'package:portal/file.dart';
+import 'package:portal/home.dart';
 import 'package:portal/profile.dart';
 
 import 'dashboard.dart';
@@ -28,6 +30,8 @@ class MyApp extends StatelessWidget {
           '/profile': (BuildContext ctx) => const Profile(),
           '/documents':(BuildContext ctx) => const FileUpload(),
           '/adminLogin':(BuildContext ctx) => const AdminLogin(),
+          '/adminHome':(BuildContext ctx) => const AdminHome(),
+          '/home':(BuildContext ctx) => const Home(),
         },
         home: const Login(),
       ),
