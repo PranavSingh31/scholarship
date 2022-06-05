@@ -83,7 +83,7 @@ class _FileUploadState extends State<FileUpload> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Welcome'),
+        title: const Text('Supporting Documents'),
         actions: <Widget>[
           TextButton(
             onPressed: (){

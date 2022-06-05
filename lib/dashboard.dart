@@ -24,10 +24,10 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    if (type == 3) {
+    if (type == 1) {
       context.loaderOverlay.show();
       Future.delayed(const Duration(milliseconds: 500), () {
-        Navigator.pushNamedAndRemoveUntil(context, '/documents', (route) => false);
+        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
       });
     } else if (type == 0) {
       Future.delayed(const Duration(milliseconds: 500), () {
@@ -76,11 +76,34 @@ class _DashboardState extends State<Dashboard> {
         .get()
         .then((value) {
       if (value.data() != null) {
-        if(value['uploadFiles']==true) {
-          type = 1;
-        }else{
-          type = 3;
-        }
+        type = 1;
+        firstName.text = value['firstName'];
+        middleName.text = value['middleName'];
+        lastName.text = value['lastName'];
+        rollNumber.text = value['rollNumber'];
+        personalMobile = value['personalMobile'];
+        addressLine1.text = value['addressLine1'];
+        addressLine2.text = value['addressLine2'];
+        city.text = value['city'];
+        state.text = value['state'];
+        motherOccupation.text = value['motherOccupation'];
+        motherName.text = value['motherName'];
+        fatherOccupation.text = value['fatherOccupation'];
+        fatherName.text = value['fatherName'];
+        fatherMobile.text = value['fatherMobile'];
+        motherMobile.text = value['motherMobile'];
+        aadhaar.text = value['aadhaar'];
+        accountNumber.text = value['accountNumber'];
+        accountName.text = value['accountName'];
+        bankIFSC.text = value['bankIFSC'];
+        selectedIncome = value['incomeSelected'];
+        selectedYear = value['yearSelected'];
+        cg.text = value['cg'];
+        backlog.text = value['backlog'];
+        jee.text = value['jee'];
+        boards.text = value['boards'];
+        selectedCase = value['specialCase'];
+        specialText.text = value['specialText'];
       } else {
         type = 2;
       }
@@ -664,13 +687,13 @@ class _DashboardState extends State<Dashboard> {
         'accountNumber': accountNumber.text.trim(),
         'accountName': accountName.text.trim(),
         'bankIFSC': bankIFSC.text.trim(),
-        'incomeOptions': selectedIncome,
-        'yearOptions': selectedYear,
+        'incomeSelected': selectedIncome,
+        'yearSelected': selectedYear,
         'cg': cg.text.trim(),
         'backlog': backlog.text.trim(),
         'jee': jee.text.trim(),
         'boards': boards.text.trim(),
-        'specialOptions': selectedCase,
+        'specialCase': selectedCase,
         'specialText': specialText.text.trim(),
         'isAdmin':false,
         'uploadFiles':false,

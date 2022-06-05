@@ -36,6 +36,14 @@ class _LoginState extends State<Login> {
         title: const Center(child:Text('Thapar Scholarship Portal')),
         actions:<Widget> [
           TextButton(
+            onPressed: (){
+              Navigator.pushNamedAndRemoveUntil(context, '/register', (route) => false);
+            },
+            child: const Padding(
+              padding: EdgeInsets.all(8),
+              child: Text('Register',style: TextStyle(color: Colors.white),),),
+          ),
+          TextButton(
               onPressed: (){
                 Navigator.pushNamedAndRemoveUntil(context, '/adminLogin', (route) => false);
               },

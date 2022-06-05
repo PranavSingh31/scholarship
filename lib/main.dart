@@ -5,6 +5,7 @@ import 'package:portal/adminLogin.dart';
 import 'package:portal/file.dart';
 import 'package:portal/home.dart';
 import 'package:portal/profile.dart';
+import 'package:portal/register.dart';
 
 import 'dashboard.dart';
 import 'login.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         ),
         routes: {
           '/login':  (BuildContext ctx) => const Login(),
+          '/register': (BuildContext ctx) => const Register(),
           '/dashboard': (BuildContext ctx) => const Dashboard(),
           '/profile': (BuildContext ctx) => const Profile(),
           '/documents':(BuildContext ctx) => const FileUpload(),

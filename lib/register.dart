@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -9,23 +9,25 @@ import 'firebase_options.dart';
 
 var email = TextEditingController();
 var pass = TextEditingController();
+var pass1 = TextEditingController();
 var _hidden = true;
+var _hidden1 =true;
 
-class AdminLogin extends StatefulWidget {
-  const AdminLogin({Key? key}) : super(key: key);
+class Register extends StatefulWidget {
+  const Register({Key? key}) : super(key: key);
 
   @override
-  State<AdminLogin> createState() => _AdminLoginState();
+  State<Register> createState() => _RegisterState();
 }
 
-class _AdminLoginState extends State<AdminLogin> {
+class _RegisterState extends State<Register> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     context.loaderOverlay.show();
     startService();
     email.text = '';
+    pass1.text = '';
     pass.text = '';
   }
 
@@ -34,7 +36,7 @@ class _AdminLoginState extends State<AdminLogin> {
     return Scaffold(
       appBar: AppBar(
         title:
-            const Center(child: Text('Thapar Scholarship Portal - Admin Mode')),
+        const Center(child: Text('Thapar Scholarship Portal - Admin Mode')),
         actions:<Widget> [
           TextButton(
             onPressed: (){
@@ -59,7 +61,7 @@ class _AdminLoginState extends State<AdminLogin> {
                 children: [
                   const Padding(padding: EdgeInsets.all(20)),
                   const Text(
-                    'Admin Login',
+                    'Register',
                     style: TextStyle(
                       fontSize: 32.0,
                     ),
@@ -106,13 +108,42 @@ class _AdminLoginState extends State<AdminLogin> {
                     ),
                   ),
                   const Padding(padding: EdgeInsets.all(8)),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * .2,
+                    child: TextField(
+                      keyboardType: TextInputType.visiblePassword,
+                      controller: pass1,
+                      obscureText: _hidden1,
+                      decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        labelText: 'Password',
+                        hintText: 'Enter Password',
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              if (_hidden1 == true) {
+                                _hidden1 = false;
+                              } else {
+                                _hidden1 = true;
+                              }
+                            });
+                          },
+                          icon: Icon(_hidden1 == true
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Padding(padding: EdgeInsets.all(8)),
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
                         _hidden = true;
+                        _hidden1 = true;
                       });
                       context.loaderOverlay.show();
-                      authValidate();
+                      authRegister();
                     },
                     child: const Padding(
                         padding: EdgeInsets.all(12.0),
@@ -143,55 +174,39 @@ class _AdminLoginState extends State<AdminLogin> {
     }
   }
 
-  Future<void> authValidate() async {
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email.text.trim(),
-        password: pass.text.trim(),
-      );
-    } on FirebaseAuthException catch (e) {
-      pass.text = '';
-      if (e.code == 'user-not-found') {
-        //print('No user found for that email.');
-        showAlert('No User Found');
-      } else if (e.code == 'wrong-password') {
-        //print('Wrong password provided for that user.');
-        showAlert('Invalid EmailID/Password\nTry Again');
-      } else if (e.code == 'invalid-email') {
-        //print('Invalid Email Entered');
-        showAlert('Enter valid EmailID');
-      } else if (e.code == 'network-request-failed') {
-        //print('Internet not connected');
-        showAlert('Please Check Internet Connection');
-      } else {
-        if (kDebugMode) {
-          print(e.code);
+  Future<void> authRegister() async {
+    if (email.text.trim().split('@')[1] == 'thapar.edu'){
+      try {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email.text.trim(),
+          password: pass.text.trim(),
+        );
+      } on FirebaseAuthException catch (e) {
+        pass.text = '';
+        if (e.code == 'user-not-found') {
+          //print('No user found for that email.');
+          showAlert('No User Found');
+        } else if (e.code == 'wrong-password') {
+          //print('Wrong password provided for that user.');
+          showAlert('Invalid EmailID/Password\nTry Again');
+        } else if (e.code == 'invalid-email') {
+          //print('Invalid Email Entered');
+          showAlert('Enter valid EmailID');
+        } else if (e.code == 'network-request-failed') {
+          //print('Internet not connected');
+          showAlert('Please Check Internet Connection');
+        } else {
+          if (kDebugMode) {
+            print(e.code);
+          }
+          showAlert('System Error\nTry Again Later');
         }
-        showAlert('System Error\nTry Again Later');
+        pass.text = '';
+        return;
       }
-      return;
+    }else{
+      showAlert('Only Thapar id allowed(@thapar.edu)!');
     }
-    pass.text = '';
-    checkAdmin();
-  }
-  Future<void> checkAdmin()async {
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-    CollectionReference userDetails = firestore.collection('user');
-    userDetails
-        .doc(FirebaseAuth.instance.currentUser?.email.toString())
-        .get()
-        .then((value) {
-      if (value.data() != null) {
-        if(value['isAdmin']==true) {
-          Navigator.pushNamedAndRemoveUntil(context, '/AdminDash', (route) => false);
-        }else{
-          FirebaseAuth.instance.signOut();
-          showAlert('No Admin Privileges');
-        }
-      } else {
-        showAlert('Account Info Incorrect\n Contact Admin');
-      }
-    });
   }
 
   void showAlert(var message) {
