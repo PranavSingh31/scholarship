@@ -16,6 +16,7 @@ class FileUpload extends StatefulWidget {
 }
 
 class _FileUploadState extends State<FileUpload> {
+  String year = DateTime.now().year.toString();
   var nameFile ='';
   var show = [0,0,0,0,0,0,0,0,0,0];
   @override
@@ -30,7 +31,6 @@ class _FileUploadState extends State<FileUpload> {
       if (result != null) {
         Uint8List? fileBytes = result.files.first.bytes;
         String fileName = '$documentName.pdf'; //result.files.first.name;
-        String year = DateTime.now().year.toString();
         // Upload file
         try{
           context.loaderOverlay.show();
@@ -137,6 +137,7 @@ class _FileUploadState extends State<FileUpload> {
           .update({
         'uploadFiles':true,
       });
+      //Get and set URL for the documents uploaded and push the values to Firestore.
     }catch (e) {
       if (kDebugMode) {
         print(e);
